@@ -56,3 +56,82 @@ Adicionando os comandos no atalho ficará assim
   "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts"
 }
 ```
+
+## Aula 02 - Banco de dados
+>No segundo dia vamos iniciar a configuração do banco de dados na nossa aplicação, aprendendo algumas formas possíveis para realizar o acesso do banco de dados através do Node JS, vamos entender os conceitos de migrations, models e criar nossa primeira tabela de usuário, também nessa aula iremos aprender e criar nosso primeiro Controller, isolando toda regra para dentro dele
+
+Para configurar o banco de dados vamos usar um `ORM` (Mapeamento objeto-relacional) onde ele vai pegar nossa classe e realizar com mapeamento com o banco de dados, esta funcionalidade vai criar algumas configurações automaticamente, oque iremos usar será o [`TypeORM`](https://typeorm.io/#/)
+```bash
+yarn add typeorm reflect-metadata
+```
+
+Também devemos instalar o drive do banco de dados, hoje iremos usar o `SQLite`
+```bash
+yarn add sqlite3
+```
+
+Para criar nossas tabelas no banco de dados iremos usar as `migrations`, mais o comando utilizado é grande, com isso iremos criar um atalho no `package.json`
+```ts
+"typeorm": "ts-node-dev node_modules/typeorm/cli.js"
+```
+
+É recomendado criar uma configuração para definir onde as migrations devem ser criadas, para isso temos que adicionar estes comando dentro do arquivo `ormconfig.json`
+```ts
+"migrations": ["./src/database/migrations/**.ts"],
+"cli": {
+  "migrationsDir": "./src/database/migrations"
+}
+```
+
+Toda tabela precisa ter uma chave primaria (PK) e podemos ter algumas chaves estrangeira (FK) onde este dados esta salvo em outra tabela e foi trazida para esta tabela
+
+
+Para criar uma migrations vamos usar o atalho configurado e mais alguns comandos
+```bash
+yarn typeorm migration:create -n Descrição
+```
+
+Para executar as migrations usamos este comando, ele vai executar somente as que estão pendente
+```bash
+yarn typeorm migration:run
+```
+
+Para excluir a execução de uma migration temos este comando que exclui uma por vez
+```bash
+yarn typeorm migration:revert
+```
+
+E para mostra um relatório com o status das migrations temos este comando
+```bash
+yarn typeorm migration:show
+```
+
+Temos a extensão `SQLite` que permite acessar os itens dentro do banco de dados
+Um `controller` é um controlador onde todas nossas regras de negocio deve ficar dentro dele
+
+Para consegui receber os dados e salvar no banco de dados precisamos criar as entidades e relacionar com o banco de dados, para isso vamos usar o método de decorator (@), antes temos que ativar estas duas configurações no arquivo `tsconfig.json`
+```ts
+"experimentalDecorators": true,
+"emitDecoratorMetadata": true,
+```
+
+Também temos que informar no arquivo `ormconfig.json` onde as entidades estão salvas
+```ts
+"entities": ["./src/models/**.ts"],
+```
+
+Para criar o id iremos usar a dependência `UUID`
+```bash
+yarn add uuid
+yarn add @types/uuid -D
+```
+
+Podemos usar o comandos `readonly` para definir que quem vai definir o dado é o sistema
+```ts
+readonly id: string;
+```
+
+Adicionando este comando no arquivo `ormconfig.json` vai permiti ver os `sql` do banco de dados
+```ts
+"logging": true,
+```
