@@ -135,3 +135,72 @@ Adicionando este comando no arquivo `ormconfig.json` vai permiti ver os `sql` do
 ```ts
 "logging": true,
 ```
+
+## Aula 03 - Testando a nossa aplicação
+>No terceiro dia vamos conhecer o conceito de repository e como podemos utilizar ele para separar as responsabilidades nos componentes corretos, vamos também dar inícios aos testes automatizados e entender os benefícios que eles trazem para a nossa aplicação
+
+No começo da aula criamos os comandos necessários para a parte da pesquisa como uma migration para criar o banco de dados, o modelo com entidade, repositório, controlador e a rota
+
+Existe vários teste automatizados, o teste unitário é utilizado para verificar as classes, o teste de integração verificamos um processo por completo como rota, controller, repository e assim vai, no último tipo de teste temos o ponta a ponta que é quando envolve o frontend
+
+Para criar os testes iremos usar a dependência abaixo
+```bash
+yarn add jest @types/jest -D
+```
+
+O primeiro passo a fazer é responder algumas perguntas para criar sua configuração
+```bash
+yarn jest --init
+```
+```
+√ Would you like to use Jest when running "test" script in "package.json"? ... yes
+√ Would you like to use Typescript for the configuration file? ... yes
+√ Choose the test environment that will be used for testing » node
+√ Do you want Jest to add coverage reports? ... no
+√ Which provider should be used to instrument code for coverage? » v8
+√ Automatically clear mock calls and instances between every test? ... yes
+```
+
+Também vamos instalar esta dependência para poder utilizar o `TypeScript`
+```bash
+yarn add ts-jest -D
+```
+
+Iremos realizar algumas mudanças no arquivo `jest.config.ts` como pode ver
+```ts
+bail: true, // faz para a execução dos testes se encontrar algum erro
+// testEnvironment: "node", // vamos deixar desabilitado
+testMatch: ["**/__tests__/*.test.ts"], // informa onde vai estar salvo os testes
+preset: "ts-jest", // para poder usar o TypeScript
+```
+
+A estrutura de um teste é bem simples como podemos ver abaixo
+```ts
+describe("Somatória das informações", () => { // describe define um grupo e sua descrição
+  it("A soma deve resultar 4", () => { // it cria um teste com uma descrição
+    expect(2 + 2).toBe(4); // expect é oque vai acontecer e toBe define qual deve ser o resultado
+  });
+
+  it("A soma não pode resultar 4", () => {
+    expect(2 + 2).not.toBe(6); // not define que não pode ser o resultado informado
+  });
+});
+```
+
+O `jest` não lida bem com teste de integração pois este precisa testar tudo como as rotas
+Por isso vamos utilizar esta dependência para criar itens fake
+```bash
+yarn add supertest @types/supertest -D
+```
+
+Para conseguir análisar todo fluxo da aplicação vamos ter que criar um banco de dados exclusivo para ele (Não poder ser um fake manual), para o sistema saber quando qual banco de dados executar criamos uma variável ambiente no atalho em `package.json` para assim o arquivo `database/index.ts` selecionar o correto
+```ts
+"testWindows": "set NODE_ENV=test&&jest",
+"testLinus": "NODE_ENV=test jest"
+```
+
+Tem como criar uma configuração nos atalhos do `package.json` para executar algo somente depois que outro comando finalizar, para isso precisa criar um novo atalho com o comando desejado e o nome deste atalho precisa iniciar com `post` e terminar com o nome outro atalho
+```ts
+"testWindows": "set NODE_ENV=test&&jest",
+"posttestWindows": "rm ./src/database/db.test.sqlite",
+```

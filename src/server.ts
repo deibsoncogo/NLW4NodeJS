@@ -1,13 +1,6 @@
-import "reflect-metadata";
-import "./database";
-import express from "express";
-import { router } from "./routes";
+import { app } from "./app";
 
-const app = express();
-
-app.use(express.json());
-app.use(router);
-
+// removendo os demais comandos vamos conseguir executar os testes sem rodar o servidor
 app.listen(3333, () => {
   console.log("SERVER IS RUNNING");
 });
