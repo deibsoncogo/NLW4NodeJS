@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { resolve } from "path";
 import { getCustomRepository } from "typeorm";
+import { AppError } from "../erros/appError";
 import { SurveysRepository } from "../repositories/surveysRepository";
 import { SurveysUsersRepository } from "../repositories/surveysUsersRepository";
 import { UsersRepository } from "../repositories/usersRepository";
@@ -19,9 +20,7 @@ class SendMailController {
     });
 
     if (!user) {
-      return response.status(400).json({
-        error: "User does not exists!",
-      });
+      throw new AppError("O usuário não existe!");
     }
 
     const survey = await surveysRepository.findOne({
@@ -29,28 +28,28 @@ class SendMailController {
     });
 
     if (!survey) {
-      return response.status(400).json({
-        erro: "Survey does not exists!",
-      });
+      throw new AppError("A pesquisa não existe!");
     }
-
-    const variables = {
-      name: user.name,
-      title: survey.title,
-      description: survey.description,
-      user_id: user.id,
-      link: process.env.URL_MAIL,
-    };
 
     // vai descobrir o caminho que esta salvo este arquivo
     const npsPath = resolve(__dirname, "..", "views", "emails", "npsMail.hbs");
 
     const surveyUserAlreadyExists = await surveysUsersRepository.findOne({
-      where: [{ user_id: user.id }, { value: null }],
+      where: { user_id: user.id, value: null },
       relations: ["user", "survey"],
     });
 
+    const variables = {
+      name: user.name,
+      title: survey.title,
+      description: survey.description,
+      id: "",
+      link: process.env.URL_MAIL,
+    };
+
     if (surveyUserAlreadyExists) {
+      variables.id = surveyUserAlreadyExists.id;
+
       await SendMailService.execute(email, survey.title, variables, npsPath);
       return response.json(surveyUserAlreadyExists);
     }
@@ -59,6 +58,8 @@ class SendMailController {
       user_id: user.id,
       survey_id,
     });
+
+    variables.id = surveyUser.id;
 
     await surveysUsersRepository.save(surveyUser);
 

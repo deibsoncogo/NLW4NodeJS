@@ -226,3 +226,23 @@ Para personalizar nosso e-mail iremos usar a dependência [`Handlebars`](https:/
 ```bash
 yarn add handlebars
 ```
+
+## Aula 05 - Finalizando nossa api com validações
+>Nessa última aula vamos finalizar o fluxo da nossa aplicação, inserir validações dos dados recebidos e aprender como tratar os possíveis erros
+
+Realizamos a refatoração de alguns itens
+
+Para definir como deve ser os dados a receber iremos usar o `yup`
+```bash
+yarn add yup
+```
+
+Para fazer um teste roda por vez precisamos adicionar o final do comando `-i`
+```ts
+"testWindows": "set NODE_ENV=test&&jest -i"
+```
+
+Para a aplicação conseguir lidar com os erros teremos que usar esta dependência
+```bash
+yarn add express-async-errors
+```
