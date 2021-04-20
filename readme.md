@@ -204,3 +204,25 @@ Tem como criar uma configuração nos atalhos do `package.json` para executar al
 "testWindows": "set NODE_ENV=test&&jest",
 "posttestWindows": "rm ./src/database/db.test.sqlite",
 ```
+
+## Aula 04 - Envio de email
+>No quarto dia vamos aprender como enviar e-mail, utilizando templates customizados com informações vindas do banco de dados, vamos aprender também como utilizar variáveis de ambiente dentro da aplicação
+
+`isNullable` permite que a linha da tabela seja criar com um compo vazio
+
+Para realizar os envios de e-mail temos a biblioteca [`Nodemailer`](https://nodemailer.com/about/)
+```bash
+yarn add nodemailer
+yarn add @types/nodemailer -D
+```
+
+Também vamos precisar de um `SMTP` que neste caso será o [`Ethereal`](https://ethereal.email/)
+
+Um `constructor` não permite utilizar o `async await` com isso vamos usar o método antigo onde as informações ficam salvo dentro dele, para isso basta adicionar no final `.then()`
+
+O `constructor` é um método que é executado assim que a classe é chama
+
+Para personalizar nosso e-mail iremos usar a dependência [`Handlebars`](https://handlebarsjs.com/)
+```bash
+yarn add handlebars
+```

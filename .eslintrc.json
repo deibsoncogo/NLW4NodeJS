@@ -22,6 +22,7 @@
     // regras alteradas
     "quotes": ["error", "double"], // obriga a usar aspas duplas
     // regras desativadas para seguir o padrão da professora
+    "@typescript-eslint/ban-types": "off",
     "camelcase": "off",
     "import/prefer-default-export": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",

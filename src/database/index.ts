@@ -11,7 +11,7 @@ export default async (): Promise<Connection> => {
         : defaultOptions.database, // original
 
       // se estiver executando um teste vai desativar o logging
-      logging: process.env.NODE_ENV !== "test",
+      // logging: process.env.NODE_ENV !== "test",
     }),
   );
 };
