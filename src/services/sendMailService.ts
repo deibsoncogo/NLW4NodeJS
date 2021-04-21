@@ -21,13 +21,13 @@ class SendMailService {
     });
   }
 
-  async execute(to: string, subject: string, variables: object, path: string) {
+  async execute(to: string, subject: string, informationEmail: object, path: string) {
     // vai realizar a leitura do arquivo informado
     const templateFileContent = fs.readFileSync(path).toString("utf8");
 
     const mailTemplateParse = handlebars.compile(templateFileContent);
 
-    const html = mailTemplateParse(variables);
+    const html = mailTemplateParse(informationEmail);
 
     const message = await this.client.sendMail({
       to,

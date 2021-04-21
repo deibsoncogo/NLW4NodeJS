@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm";
 import { resolve } from "path";
+import * as yup from "yup";
 import { AppError } from "../error/appError";
 import { SurveyRepository } from "../repositories/surveyRepository";
 import { SurveyUserRepository } from "../repositories/surveyUserRepository";
@@ -20,7 +21,7 @@ class SendMailController {
     });
 
     if (!user) {
-      throw new AppError("O usuário não existe!");
+      throw new AppError("Email não cadastrado!");
     }
 
     const survey = await surveyRepository.findOne({
@@ -34,24 +35,26 @@ class SendMailController {
     // vai descobrir o caminho que esta salvo este arquivo
     const npsPath = resolve(__dirname, "..", "views", "emails", "npsMail.hbs");
 
-    const surveyUserAlreadyExist = await surveyUserRepository.findOne({
-      where: { userId: user.id, value: null },
+    const userSurveyExisted = await surveyUserRepository.findOne({
+      where: { userId: user.id, surveyId },
       relations: ["user", "survey"],
     });
 
-    const information = {
+    const informationEmail = {
       name: user.name,
       title: survey.title,
       description: survey.description,
-      id: "",
+      userSurveyId: userSurveyExisted ? userSurveyExisted.id : "",
       link: process.env.URL_MAIL,
     };
 
-    if (surveyUserAlreadyExist) {
-      information.id = surveyUserAlreadyExist.id;
-
-      await SendMailService.execute(email, survey.title, information, npsPath);
-      return response.json(surveyUserAlreadyExist);
+    if (userSurveyExisted) {
+      if (userSurveyExisted.value) {
+        throw new AppError("O usuário já respondeu esta pesquisa!");
+      } else {
+        await SendMailService.execute(email, survey.title, informationEmail, npsPath);
+        return response.json(userSurveyExisted);
+      }
     }
 
     const surveyUser = surveyUserRepository.create({
@@ -59,9 +62,11 @@ class SendMailController {
       surveyId,
     });
 
-    information.id = surveyUser.id;
+    informationEmail.userSurveyId = surveyUser.id;
 
     await surveyUserRepository.save(surveyUser);
+
+    await SendMailService.execute(email, survey.title, informationEmail, npsPath);
 
     return response.json(surveyUser);
   }
