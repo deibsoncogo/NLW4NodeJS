@@ -16,7 +16,7 @@ class UserController {
 
       await schema.validate(request.body, { abortEarly: false });
     } catch (err) {
-      throw new AppError(err.errors);
+      throw new AppError(err.errors, 401);
     }
 
     const userRepository = getCustomRepository(UserRepository);
@@ -26,7 +26,7 @@ class UserController {
     });
 
     if (userAlreadyExist) {
-      throw new AppError("Email já cadastrado!");
+      throw new AppError("Email já cadastrado!", 412);
     }
 
     const user = userRepository.create({

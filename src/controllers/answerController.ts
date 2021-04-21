@@ -9,8 +9,8 @@ class AnswerController {
     const { value } = request.params;
     const { u } = request.query;
 
-    if (validate(String(u))) {
-      throw new AppError("ID do usuário inválido!");
+    if (!validate(String(u))) {
+      throw new AppError("ID do usuário inválido!", 403);
     }
 
     const surveyUserRepository = getCustomRepository(SurveyUserRepository);
@@ -20,14 +20,14 @@ class AnswerController {
     });
 
     if (!surveyUser) {
-      throw new AppError("O usuário da pesquisa não existe!");
+      throw new AppError("O usuário da pesquisa não existe!", 403);
     }
 
     surveyUser.value = Number(value);
 
     await surveyUserRepository.save(surveyUser);
 
-    return response.json(surveyUser);
+    return response.status(201).send("Resposta recebida, obrigado");
   }
 }
 

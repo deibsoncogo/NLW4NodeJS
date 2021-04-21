@@ -21,11 +21,11 @@ class SendMailController {
 
       await schema.validate(request.body, { abortEarly: false });
     } catch (err) {
-      throw new AppError(err.errors);
+      throw new AppError(err.errors, 401);
     }
 
     if (!validate(surveyId)) {
-      throw new AppError("ID da pesquisa inválido!");
+      throw new AppError("ID da pesquisa inválido!", 403);
     }
 
     const userRepository = getCustomRepository(UserRepository);
@@ -37,7 +37,7 @@ class SendMailController {
     });
 
     if (!user) {
-      throw new AppError("Email não cadastrado!");
+      throw new AppError("Email não cadastrado!", 403);
     }
 
     const survey = await surveyRepository.findOne({
@@ -45,7 +45,7 @@ class SendMailController {
     });
 
     if (!survey) {
-      throw new AppError("A pesquisa não existe!");
+      throw new AppError("A pesquisa não existe!", 412);
     }
 
     // vai descobrir o caminho que esta salvo este arquivo
@@ -66,10 +66,10 @@ class SendMailController {
 
     if (userSurveyExisted) {
       if (userSurveyExisted.value) {
-        throw new AppError("O usuário já respondeu esta pesquisa!");
+        throw new AppError("O usuário já respondeu esta pesquisa!", 412);
       } else {
         await SendMailService.execute(email, survey.title, informationEmail, npsPath);
-        return response.json(userSurveyExisted);
+        return response.status(205).json(userSurveyExisted);
       }
     }
 
@@ -84,7 +84,7 @@ class SendMailController {
 
     await SendMailService.execute(email, survey.title, informationEmail, npsPath);
 
-    return response.json(surveyUser);
+    return response.status(201).json(surveyUser);
   }
 }
 

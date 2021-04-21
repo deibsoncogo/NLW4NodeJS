@@ -22,7 +22,7 @@ app.use((err: Error, request: Request, response: Response, _next: NextFunction) 
 
   return response.status(500).json({
     status: "Erro",
-    message: `Erro interno do servidor \n ${err.message}`,
+    message: `Erro interno do servidor! ${err.message}`,
   });
 });
 

@@ -8,11 +8,11 @@ class SurveyController {
     const { title, description } = request.body;
 
     if (title === "") {
-      throw new AppError("Título é obrigatório!");
+      throw new AppError("Título é obrigatório!", 412);
     }
 
     if (description === "") {
-      throw new AppError("Descrição é obrigatória!");
+      throw new AppError("Descrição é obrigatória!", 412);
     }
 
     const surveyRepository = getCustomRepository(SurveyRepository);
@@ -22,7 +22,7 @@ class SurveyController {
     });
 
     if (surveyExisted) {
-      throw new AppError("Já existe cadastrado um pesquisa com esta descrição!");
+      throw new AppError("Já existe cadastrado um pesquisa com esta descrição!", 412);
     }
 
     const survey = surveyRepository.create({
@@ -40,7 +40,7 @@ class SurveyController {
 
     const all = await surveyRepository.find();
 
-    return response.status(201).json(all);
+    return response.status(200).json(all);
   }
 }
 

@@ -9,7 +9,7 @@ class NpsController {
     const { surveyId } = request.params;
 
     if (!validate(surveyId)) {
-      throw new AppError("ID da pesquisa inválido!");
+      throw new AppError("ID da pesquisa inválido!", 403);
     }
 
     const surveyUserRepository = getCustomRepository(SurveyUserRepository);
@@ -23,7 +23,7 @@ class NpsController {
 
     const calculate = Number((((promoter - detractor) / totalAnswer) * 100).toFixed(2));
 
-    return response.json({
+    return response.status(201).json({
       detractor, passive, promoter, totalAnswer, nps: calculate,
     });
   }
