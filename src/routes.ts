@@ -14,6 +14,7 @@ const answerController = new AnswerController();
 const npsController = new NpsController();
 
 router.post("/user", userController.create);
+router.get("/user", userController.show);
 
 router.post("/survey", surveyController.create);
 router.get("/survey", surveyController.show);
