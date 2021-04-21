@@ -202,7 +202,7 @@ Para conseguir análisar todo fluxo da aplicação vamos ter que criar um banco 
 Tem como criar uma configuração nos atalhos do `package.json` para executar algo somente depois que outro comando finalizar, para isso precisa criar um novo atalho com o comando desejado e o nome deste atalho precisa iniciar com `post` e terminar com o nome outro atalho
 ```ts
 "testWindows": "set NODE_ENV=test&&jest",
-"posttestWindows": "rm ./src/database/db.test.sqlite",
+"posttestWindows": "rm ./src/database/nlw4nodejs.test.sqlite",
 ```
 
 ## Aula 04 - Envio de email

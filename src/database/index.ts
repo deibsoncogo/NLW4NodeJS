@@ -7,7 +7,7 @@ export default async (): Promise<Connection> => {
   return createConnection(
     Object.assign(defaultOption, { // vai extrair as informações
       database: process.env.NODE_ENV === "test" // vai verificar qual banco de dados usar
-        ? "./src/database/db.test.sqlite" // fake
+        ? "./src/database/nlw4nodejs.test.sqlite" // fake
         : defaultOption.database, // original
 
       // se estiver executando um teste vai desativar o logging
