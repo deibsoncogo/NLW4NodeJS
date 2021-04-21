@@ -1,10 +1,16 @@
 import { Request, Response } from "express";
 import { getCustomRepository, Not, IsNull } from "typeorm";
+import { validate } from "uuid";
+import { AppError } from "../error/appError";
 import { SurveyUserRepository } from "../repositories/surveyUserRepository";
 
 class NpsController {
   async execute(request: Request, response: Response) {
     const { surveyId } = request.params;
+
+    if (!validate(surveyId)) {
+      throw new AppError("ID da pesquisa inválido!");
+    }
 
     const surveyUserRepository = getCustomRepository(SurveyUserRepository);
 
