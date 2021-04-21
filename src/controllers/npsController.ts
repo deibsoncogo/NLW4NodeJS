@@ -1,24 +1,24 @@
 import { Request, Response } from "express";
 import { getCustomRepository, Not, IsNull } from "typeorm";
-import { SurveysUsersRepository } from "../repositories/surveysUsersRepository";
+import { SurveyUserRepository } from "../repositories/surveyUserRepository";
 
 class NpsController {
   async execute(request: Request, response: Response) {
-    const { survey_id } = request.params;
+    const { surveyId } = request.params;
 
-    const surveysUsersRepository = getCustomRepository(SurveysUsersRepository);
+    const surveyUserRepository = getCustomRepository(SurveyUserRepository);
 
-    const surveysUsers = await surveysUsersRepository.find({ survey_id, value: Not(IsNull()) });
+    const surveyUser = await surveyUserRepository.find({ surveyId, value: Not(IsNull()) });
 
-    const detractor = surveysUsers.filter((i) => i.value >= 0 && i.value <= 6).length;
-    const passive = surveysUsers.filter((i) => i.value >= 7 && i.value <= 8).length;
-    const promoters = surveysUsers.filter((i) => i.value >= 9 && i.value <= 10).length;
-    const totalAnswers = surveysUsers.length;
+    const detractor = surveyUser.filter((i) => i.value >= 0 && i.value <= 6).length;
+    const passive = surveyUser.filter((i) => i.value >= 7 && i.value <= 8).length;
+    const promoter = surveyUser.filter((i) => i.value >= 9 && i.value <= 10).length;
+    const totalAnswer = surveyUser.length;
 
-    const calculate = Number((((promoters - detractor) / totalAnswers) * 100).toFixed(2));
+    const calculate = Number((((promoter - detractor) / totalAnswer) * 100).toFixed(2));
 
     return response.json({
-      detractor, passive, promoters, totalAnswers, nps: calculate,
+      detractor, passive, promoter, totalAnswer, nps: calculate,
     });
   }
 }

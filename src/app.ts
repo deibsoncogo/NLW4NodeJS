@@ -2,8 +2,8 @@ import "reflect-metadata";
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import createConnection from "./database";
+import { AppError } from "./error/appError";
 import { router } from "./routes";
-import { AppError } from "./erros/appError";
 
 createConnection();
 

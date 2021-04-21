@@ -13,7 +13,8 @@
     "sourceType": "module"
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "eslint-plugin-import-helpers"
   ],
   "rules": {
     // desativa a restrição de uso
@@ -21,7 +22,24 @@
     "no-console": "off", // console
     // regras alteradas
     "quotes": ["error", "double"], // obriga a usar aspas duplas
+    // ordena importações
+    "import-helpers/order-imports": [ // ordena importações
+      "warn", {
+        "groups": [
+          ["/react/", "/next/", "/express/", "/typeorm/"],
+          "module",
+          ["parent", "sibling", "index"],
+          "/style/"
+        ],
+        "newlinesBetween": "never",
+        "alphabetize": {
+          "order": "asc",
+          "ignoreCase": true
+        }
+      }
+    ],
     // regras desativadas para seguir o padrão da professora
+    "object-curly-newline": "off",
     "@typescript-eslint/ban-types": "off",
     "camelcase": "off",
     "import/prefer-default-export": "off",

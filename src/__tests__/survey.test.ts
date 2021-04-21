@@ -1,10 +1,9 @@
-import request from "supertest";
 import { getConnection } from "typeorm";
+import request from "supertest";
 import { app } from "../app";
-
 import createConnection from "../database";
 
-describe("Surveys", () => {
+describe("Survey", () => {
   beforeAll(async () => {
     const connection = await createConnection();
     await connection.runMigrations();
@@ -17,7 +16,7 @@ describe("Surveys", () => {
   });
 
   it("Should be able to create a new survey", async () => {
-    const response = await request(app).post("/surveys").send({
+    const response = await request(app).post("/survey").send({
       title: "Title Example",
       description: "Description Example",
     });
@@ -26,13 +25,13 @@ describe("Surveys", () => {
     expect(response.body).toHaveProperty("id");
   });
 
-  it("Should be able to get all surveys", async () => {
-    await request(app).post("/surveys").send({
+  it("Should be able to get all survey", async () => {
+    await request(app).post("/survey").send({
       title: "Title Example",
       description: "Description Example",
     });
 
-    const response = await request(app).get("/surveys");
+    const response = await request(app).get("/survey");
 
     expect(response.body.length).toBe(2);
   });

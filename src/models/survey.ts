@@ -1,9 +1,7 @@
-import {
-  Column, CreateDateColumn, Entity, PrimaryColumn,
-} from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-@Entity("surveys")
+@Entity("survey")
 class Survey {
   @PrimaryColumn()
   readonly id: string;
@@ -15,7 +13,7 @@ class Survey {
   description: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   constructor() {
     if (!this.id) {

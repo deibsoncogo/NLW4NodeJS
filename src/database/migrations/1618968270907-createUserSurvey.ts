@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class CreateSurveyUsers1618848770837 implements MigrationInterface {
+export class createUserSurvey1618968270907 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: "surveys_users",
+        name: "userSurvey",
         columns: [
           {
             name: "id",
@@ -12,11 +12,11 @@ export class CreateSurveyUsers1618848770837 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: "user_id",
+            name: "userId",
             type: "uuid",
           },
           {
-            name: "survey_id",
+            name: "surveyId",
             type: "uuid",
           },
           {
@@ -25,7 +25,7 @@ export class CreateSurveyUsers1618848770837 implements MigrationInterface {
             isNullable: true, // permite criar a tabela com esta célula vazia
           },
           {
-            name: "created_at",
+            name: "createdAt",
             type: "timestamp",
             default: "now()",
           },
@@ -35,17 +35,17 @@ export class CreateSurveyUsers1618848770837 implements MigrationInterface {
         foreignKeys: [
           {
             name: "FKUser",
-            referencedTableName: "users",
+            referencedTableName: "user",
             referencedColumnNames: ["id"],
-            columnNames: ["user_id"],
+            columnNames: ["userId"],
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
           },
           {
             name: "FKSurvey",
-            referencedTableName: "surveys",
+            referencedTableName: "survey",
             referencedColumnNames: ["id"],
-            columnNames: ["survey_id"],
+            columnNames: ["surveyId"],
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
           },
@@ -55,6 +55,6 @@ export class CreateSurveyUsers1618848770837 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("surveys_users");
+    await queryRunner.dropTable("userSurvey");
   }
 }

@@ -1,34 +1,32 @@
-import {
-  Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn,
-} from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Survey } from "./survey";
 import { User } from "./user";
 
-@Entity("surveys_users")
+@Entity("userSurvey")
 class SurveyUser {
   @PrimaryColumn()
   readonly id: string;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: "user_id" })
+  @JoinColumn({ name: "userId" })
   user: User
 
   @Column()
-  user_id: string;
+  userId: string;
 
   @ManyToOne(() => Survey)
-  @JoinColumn({ name: "survey_id" })
+  @JoinColumn({ name: "surveyId" })
   survey: Survey
 
   @Column()
-  survey_id: string;
+  surveyId: string;
 
   @Column()
   value: number;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   constructor() {
     if (!this.id) {
